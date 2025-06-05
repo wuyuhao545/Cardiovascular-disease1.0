@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进行诊断 - 心血管疾病风险预测</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --text-color: #333;
+            --success-color: #2e7d32;
+            --danger-color: #b71c1c;
+        }
+
+        body {
+            background-image: url('yiyuan.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        h1:hover::after {
+            width: 120px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
+
+        .disease-options {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .disease-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .disease-option input {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .disease-option span {
+            font-size: 1.1rem;
+        }
+
+        .disease-option input:checked + span {
+            font-weight: 600;
+        }
+
+        .disease-option.yes input:checked + span {
+            color: var(--danger-color);
+        }
+
+        .disease-option.no input:checked + span {
+            color: var(--success-color);
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 150px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group textarea:hover {
+            border-color: var(--primary-color);
+        }
+
+        .submit-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #303f9f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 40px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px 30px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .disease-options {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('doctor_dashboard') }}" class="back-link"><i class="fa fa-arrow-left"></i> 返回医生端</a>
+        <h1>进行诊断</h1>
+        
+        <div class="patient-info" style="margin-bottom: 40px; padding: 20px; background-color: rgba(245, 245, 245, 0.8); border-radius: 10px;">
+            <h3>患者信息</h3>
+            <p><strong>年龄:</strong> {{ patient_info.age }} 岁</p>
+            <p><strong>性别:</strong> {{ patient_info.gender }}</p>
+            <p><strong>BMI:</strong> {{ patient_info.bmi }}</p>
+            <p><strong>血压:</strong> {{ patient_info.ap_hi }}/{{ patient_info.ap_lo }} mmHg</p>
+            <p><strong>风险概率:</strong> {{ patient_info.prediction }}%</p>
+            <p><strong>风险等级:</strong> {{ patient_info.risk_level }}</p>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>疾病诊断</label>
+                <div class="disease-options">
+                    <div class="disease-option yes">
+                        <input type="radio" id="disease_yes" name="disease" value="是" required>
+                        <span>患有心血管疾病</span>
+                    </div>
+                    <div class="disease-option no">
+                        <input type="radio" id="disease_no" name="disease" value="否" required>
+                        <span>未患有心血管疾病</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="doctor_comments">医生意见</label>
+                <textarea id="doctor_comments" name="doctor_comments" rows="8" required placeholder="请输入您的专业意见和建议..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">提交诊断</button>
+        </form>
+    </div>
+</body>
+</html>

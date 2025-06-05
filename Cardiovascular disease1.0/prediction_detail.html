@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预测详情 - 心血管疾病风险预测</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --text-color: #333;
+            --low-risk-color: #2e7d32;
+            --medium-risk-color: #f57c00;
+            --high-risk-color: #b71c1c;
+        }
+
+        body {
+            background-image: url('yiyuan.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.02);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        h1:hover::after {
+            width: 120px;
+        }
+
+        .detail-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        .detail-header h2 {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .detail-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .info-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-table td:first-child {
+            width: 30%;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .risk-result {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .risk-result.low {
+            background-color: #e8f5e9;
+            border: 2px solid #c8e6c9;
+            color: var(--low-risk-color);
+        }
+
+        .risk-result.medium {
+            background-color: #fff9c4;
+            border: 2px solid #fff59d;
+            color: var(--medium-risk-color);
+        }
+
+        .risk-result.high {
+            background-color: #ffebee;
+            border: 2px solid #ffcdd2;
+            color: var(--high-risk-color);
+        }
+
+        .risk-result h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .risk-result p {
+            font-size: 1.2rem;
+        }
+
+        .recommendations ul, .risk-factors ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendations li, .risk-factors li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .recommendations li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            color: var(--low-risk-color);
+        }
+
+        .risk-factors li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            color: var(--high-risk-color);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 40px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .detail-section {
+                padding: 15px;
+            }
+
+            .detail-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px 30px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('history') }}" class="back-link"><i class="fa fa-arrow-left"></i> 返回历史记录</a>
+        <h1>预测详情</h1>
+
+        <div class="detail-section">
+            <div class="detail-header">
+                <h2>基本信息</h2>
+            </div>
+            <table class="info-table">
+                <!-- 基本信息表格内容 -->
+            </table>
+        </div>
+
+        <div class="detail-section risk-result {{ 'low' if risk_level == '低风险' else 'medium' if risk_level == '中等风险' else 'high' }}">
+            <h3>风险等级</h3>
+            <p>{{ risk_level }}</p>
+        </div>
+
+        <div class="detail-section recommendations">
+            <h2>健康建议</h2>
+            <ul>
+                {% for rec in recommendations %}
+                <li>{{ rec }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="detail-section risk-factors">
+            <h2>风险因素</h2>
+            <ul>
+                {% for factor in risk_factors %}
+                <li>{{ factor }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 在prediction_detail.html中更新诊断结果显示 -->
+        <div class="detail-section diagnosis">
+            <h2>医生诊断</h2>
+            {% if diagnosis %}
+            <p><strong>疾病诊断:</strong> {{ disease }}</p>
+            <p><strong>医生意见:</strong> {{ diagnosis }}</p>
+            {% else %}
+            <p>未诊断</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
